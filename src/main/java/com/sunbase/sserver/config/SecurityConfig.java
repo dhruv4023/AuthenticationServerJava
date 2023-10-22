@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/sunbase/portal/api/assignment_auth",
-                        "/home"
+                        "/createAdmin","/"
                 ).permitAll()
                 .and()
                 .authorizeHttpRequests()
