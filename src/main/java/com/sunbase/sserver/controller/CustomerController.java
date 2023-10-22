@@ -1,6 +1,8 @@
 package com.sunbase.sserver.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sunbase.sserver.models.AuthRequest;
 import com.sunbase.sserver.repository.CustomerService;
@@ -37,8 +39,9 @@ public class CustomerController {
 
     @DeleteMapping("assignment/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable String id) {
+        System.out.printf(id);
         customerService.deleteCustomer(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(null);
     }
 
     @PutMapping("assignment/{id}")
@@ -60,12 +63,14 @@ public class CustomerController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("assignment_auth")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        System.out.printf(authRequest.toString());
+    public Map<String, String> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
+        Map<String, String> res=new HashMap<>();
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getUsername());
+            String token= jwtService.generateToken(authRequest.getUsername());
+            res.put("token",token);
+            return res;
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
