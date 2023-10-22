@@ -56,6 +56,11 @@
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email</th>
+          <th>Phone</th>
+          <th>Street</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>State</th>
           <th>Actions</th>
         </tr>
         <tbody id="customerListTable"></tbody>
@@ -157,13 +162,17 @@
             const customerListTable =
               document.getElementById("customerListTable");
             customerListTable.innerHTML = "";
-            console.log(data);
             data.forEach((customer) => {
               const row = document.createElement("tr");
               row.innerHTML = `
                       <td>${customer.first_name}</td>
                       <td>${customer.last_name}</td>
                       <td>${customer.email}</td>
+                      <td>${customer.phone}</td>
+                      <td>${customer.street}</td>
+                      <td>${customer.address}</td>
+                      <td>${customer.city}</td>
+                      <td>${customer.state}</td>
                       <td>
                           <button onclick="deleteCustomer('${customer.uuid}')">Delete</button>
                           <button onclick="updateCustomer('${customer.uuid}')">Update</button>
