@@ -17,7 +17,6 @@ public class AuthController {
     @Autowired
     private AuthService userService;
 
-    
     @PostMapping("/signup")
     public ResponseEntity<ResponseObject> signup(@RequestBody UserModel user) {
         ResponseObject response = userService.signup(user);

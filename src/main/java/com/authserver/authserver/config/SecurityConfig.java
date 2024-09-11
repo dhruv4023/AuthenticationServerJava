@@ -2,6 +2,9 @@ package com.authserver.authserver.config;
 
 import java.util.List;
 
+import org.springframework.session.Session;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +12,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig<S extends Session> {
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -35,16 +39,6 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new AuthUserDetailsService();
     }
-
-    // @Bean
-    // public AuthenticationManager
-    // authenticationManager(AuthenticationConfiguration
-    // authenticationConfiguration) throws Exception {
-    // AuthenticationManager manager =
-    // authenticationConfiguration.getAuthenticationManager();
-    // System.out.println("AuthenticationManager Bean Created: " + manager);
-    // return manager;
-    // }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -67,10 +61,21 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Return 401 instead of redirect
                             response.getWriter().write("Unauthorized");
                         }))
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .maximumSessions(1) // Limit to 1 session per user
+                        .sessionRegistry(sessionRegistry()))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add JwtFilter before
                                                                                          // UsernamePasswordAuthenticationFilter
 
         return http.build();
+    }
+
+    @Autowired
+    private FindByIndexNameSessionRepository<S> sessionRepository;
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SpringSessionBackedSessionRegistry<>(sessionRepository);
     }
 
     @Bean

@@ -32,7 +32,7 @@ public class UserModel {
         this.role = role;
     }
 
-    public Long getId() {   
+    public Long getId() {
         return id;
     }
 

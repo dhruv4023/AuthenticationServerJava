@@ -33,7 +33,6 @@ public class AuthService {
     @Autowired
     private RoleRepository roleRepository;
 
-
     public ResponseObject signup(UserModel user) {
         try {
             if (user.getUsername() == null || user.getPassword() == null || user.getEmail() == null) {
@@ -72,13 +71,22 @@ public class AuthService {
         try {
             UserModel user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found"));
+
             if (passwordEncoder.matches(password, user.getPassword())) {
-                user.setPassword(null); // Remove password for security
+                // Create a new response object without the password
+                UserModel responseUser = new UserModel();
+                responseUser.setId(user.getId());
+                responseUser.setUsername(user.getUsername());
+                responseUser.setEmail(user.getEmail());
+                responseUser.setRole(user.getRole());
+
+                // Store session and generate token
                 session.setAttribute("user", username);
                 String token = jwtUtil.generateToken(username, user.getRole().getRoleName());
+
                 return new ResponseObject(true, "Login successful", new HashMap<>() {
                     {
-                        put("user", user);
+                        put("user", responseUser); // Send user info without password
                         put("token", token);
                     }
                 });
