@@ -6,11 +6,10 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 
 // @SpringBootApplication
 
-@SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
+@SpringBootApplication(exclude = { UserDetailsServiceAutoConfiguration.class })
 public class AuthserverApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AuthserverApplication.class, args);
 	}
-
 }

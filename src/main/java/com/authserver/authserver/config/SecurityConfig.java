@@ -55,15 +55,15 @@ public class SecurityConfig<S extends Session> {
                         .requestMatchers("/api/login").permitAll() // Permit login requests
                         .anyRequest().authenticated() // All other requests need authentication
                 )
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .maximumSessions(1) // Limit to 1 session per user
+                        .sessionRegistry(sessionRegistry()))
                 .httpBasic(Customizer.withDefaults()) // Use HTTP Basic for API authentication
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Return 401 instead of redirect
                             response.getWriter().write("Unauthorized");
                         }))
-                .sessionManagement(sessionManagement -> sessionManagement
-                        .maximumSessions(1) // Limit to 1 session per user
-                        .sessionRegistry(sessionRegistry()))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add JwtFilter before
                                                                                          // UsernamePasswordAuthenticationFilter
 

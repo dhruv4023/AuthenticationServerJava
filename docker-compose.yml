@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysqldb
+    environment:
+      DATABASE_HOST: docker-mysql
+      MYSQL_DATABASE: javadb
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: root
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  springapp:
+    build: .
+    container_name: springapp
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/javadb
+      SPRING_DATASOURCE_USERNAME: root
+
+volumes:
+  mysql-data:
