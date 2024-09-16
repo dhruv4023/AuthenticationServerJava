@@ -19,6 +19,7 @@ services:
   springapp:
     build: .
     container_name: springapp
+    image: dhruv4023/java-auth-server:latest 
     ports:
       - "8080:8080"
     depends_on:
