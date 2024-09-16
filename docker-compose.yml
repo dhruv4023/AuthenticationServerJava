@@ -5,9 +5,7 @@ services:
     environment:
       DATABASE_HOST: docker-mysql
       MYSQL_DATABASE: javadb
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_USER: root
-      MYSQL_PASSWORD: admin
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
     ports:
       - "3306:3306"
     volumes:
