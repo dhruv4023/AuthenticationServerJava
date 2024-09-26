@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.3</version>
+		<version>3.3.4</version>
 		<relativePath/>
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.authserver</groupId>
 	<artifactId>authserver</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>authserver</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -84,11 +84,12 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<plugins>
+    	<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+        <finalName>authserverj</finalName>
 	</build>
 </project>
